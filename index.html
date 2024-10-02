@@ -3609,42 +3609,49 @@ have suffered alteration some form.
                                                 </form>
                                                 
                                                 <script>
-                                                    document.getElementById('orderForm').addEventListener('submit', function(event) {
-                                                        event.preventDefault(); // Prevent default form submission
-                                                
-                                                        const name = document.getElementById('your-name').value;
-                                                        const email = document.getElementById('your-email').value;
-                                                        const subject = document.getElementById('your-subject').value;
-                                                        const message = document.getElementById('your-message').value;
-                                                        const address = document.getElementById('your-address').value;
-                                                
-                                                        const webhookUrl = 'https://discord.com/api/webhooks/1285996227833495725/DIB30vr_X528y431u7XY_HHKcOFqS_QKijE0JSKMB5UTkw8xgdRe9ct9cyNS-p0ukWVE'; // Replace with your actual Discord webhook URL
-                                                
-                                                        // Prepare the data payload
-                                                        const payload = {
-                                                            content: `New Order Inquiry:\n**Name:** ${name}\n**Phone Number:** ${email}\n**Subject:** ${subject}\n**Message:** ${message}\n**Address:** ${address}`
-                                                        };
-                                                
-                                                        // Send the payload to the Discord webhook
-                                                        fetch(webhookUrl, {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            body: JSON.stringify(payload)
-                                                        })
-                                                        .then(response => {
-                                                            if (response.ok) {
-                                                                document.getElementById('form-status').innerHTML = '<p style="color:green;">Message sent successfully!</p>';
-                                                                document.getElementById('orderForm').reset(); // Reset the form
-                                                            } else {
-                                                                document.getElementById('form-status').innerHTML = '<p style="color:red;">Failed to send message. Please try again.</p>';
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            document.getElementById('form-status').innerHTML = '<p style="color:red;">An error occurred. Please try again.</p>';
-                                                        });
-                                                    });
+                                                   document.getElementById('orderForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const name = document.getElementById('your-name').value.trim();
+    const email = document.getElementById('your-email').value.trim();
+    const subject = document.getElementById('your-subject').value.trim();
+    const message = document.getElementById('your-message').value.trim();
+    const address = document.getElementById('your-address').value.trim();
+
+    // Validation to ensure all fields are filled
+    if (!name || !email || !subject || !message || !address) {
+        document.getElementById('form-status').innerHTML = '<p style="color:red;">Please fill out all fields.</p>';
+        return; // Stop the submission
+    }
+
+    const webhookUrl = 'https://discord.com/api/webhooks/1285996227833495725/DIB30vr_X528y431u7XY_HHKcOFqS_QKijE0JSKMB5UTkw8xgdRe9ct9cyNS-p0ukWVE'; // Replace with your actual Discord webhook URL
+
+    // Prepare the data payload
+    const payload = {
+        content: `New Order Inquiry:\n**Name:** ${name}\n**Email:** ${email}\n**Subject:** ${subject}\n**Message:** ${message}\n**Address:** ${address}`
+    };
+
+    // Send the payload to the Discord webhook
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById('form-status').innerHTML = '<p style="color:green;">Message sent successfully!</p>';
+            document.getElementById('orderForm').reset(); // Reset the form
+        } else {
+            document.getElementById('form-status').innerHTML = '<p style="color:red;">Failed to send message. Please try again.</p>';
+        }
+    })
+    .catch(error => {
+        document.getElementById('form-status').innerHTML = '<p style="color:red;">An error occurred. Please try again.</p>';
+    });
+});
+
                                                 </script>
                                                 
                                             </div>
